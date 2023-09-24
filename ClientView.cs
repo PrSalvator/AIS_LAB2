@@ -48,7 +48,7 @@ namespace AIS_LAB2
                     {
                         var message = Console.ReadLine(); // сообщение для отправки
                                                           // если введена пустая строка, выходим из цикла и завершаем ввод сообщений
-                        if (string.IsNullOrWhiteSpace(message)) break;
+                        //if (string.IsNullOrWhiteSpace(message)) break;
                         // иначе добавляем к сообщению имя пользователя
                         message = $"{message}";
                         byte[] data = Encoding.UTF8.GetBytes(message);

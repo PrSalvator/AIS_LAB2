@@ -27,7 +27,7 @@ namespace Server
             return serverController;
         }
 
-        public async Task ReceiveReadMessageAsync()
+        public async Task ReceiveDataForReadAsync()
         {
             using (UdpClient receiver = new UdpClient(localPort0))
             {
@@ -37,7 +37,14 @@ namespace Server
                     var result = await receiver.ReceiveAsync();
                     var message = Encoding.UTF8.GetString(result.Buffer);
                     // выводим сообщение
-                    Console.WriteLine(message);
+                    if (message == "") 
+                    {
+
+                    }
+                    else
+                    {
+                        int index = int.Parse(message);
+                    }
                 }
             }
         }

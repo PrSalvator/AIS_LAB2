@@ -16,26 +16,26 @@ namespace Server
 
             Console.WriteLine("UDP-сервер запущен");
 
-            Task.Run(serverController.ReceiveReadMessageAsync);
+            Task.Run(serverController.ReceiveDataForReadAsync);
 
             //Task.Run(ReadMessageAsync);
 
             Console.ReadKey();
 
-            async Task ReceiveMessageAsync()
-            {
-                using (UdpClient receiver = new UdpClient(3000))
-                {
-                    while (true)
-                    {
-                        // получаем данные
-                        var result = await receiver.ReceiveAsync();
-                        var message = Encoding.UTF8.GetString(result.Buffer);
-                        // выводим сообщение
-                        Console.WriteLine(message);
-                    }
-                }
-            }
+            //async Task ReceiveMessageAsync()
+            //{
+            //    using (UdpClient receiver = new UdpClient(3000))
+            //    {
+            //        while (true)
+            //        {
+            //            // получаем данные
+            //            var result = await receiver.ReceiveAsync();
+            //            var message = Encoding.UTF8.GetString(result.Buffer);
+            //            // выводим сообщение
+            //            Console.WriteLine(message);
+            //        }
+            //    }
+            //}
 
             //async Task SendMessageAsync()
             //{
