@@ -36,16 +36,23 @@ namespace Server
                     // получаем данные
                     var result = await receiver.ReceiveAsync();
                     var message = Encoding.UTF8.GetString(result.Buffer);
-                    // выводим сообщение
-                    if (message == "") 
+                    if (int.TryParse(message, out int index)) // Чтение по индексу
                     {
-
+                        Console.WriteLine(message);
+                        continue;
                     }
-                    else
-                    {
-                        int index = int.Parse(message);
-                    }
+                    // Чтение файла полностью
                 }
+            }
+        }
+
+        public async Task SendMessageAsync(string message)
+        {
+            using (UdpClient sender = new UdpClient())
+            {
+                byte[] data = Encoding.UTF8.GetBytes(message);
+                // и отправляем на 127.0.0.1:remotePort
+                await sender.SendAsync(data, message.Length, new IPEndPoint(localAddress, remotePort));
             }
         }
     }
