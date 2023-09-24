@@ -15,6 +15,8 @@ namespace Server
         private int localPort1 = 3001; // для вывода данных
         private int remotePort = 3002;
 
+        private DataController dataController = DataController.Initialyze();
+
         private static ServerController serverController = null;
         protected ServerController()
         {
