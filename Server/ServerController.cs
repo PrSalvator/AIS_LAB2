@@ -5,17 +5,20 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace Server
 {
     class ServerController
     {
         private IPAddress localAddress = IPAddress.Parse("127.0.0.1");
-        private int localPort0 = 3000; // для добавления данных
-        private int localPort1 = 3001; // для вывода данных
-        private int remotePort = 3002;
+        
+        private int localPortRead = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortRead")); // для вывода данных
+        private int localPortWrite = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortWrite")); // для добавления данных
+        private int remotePort = int.Parse(ConfigurationManager.AppSettings.Get("RemotePort"));
 
-        private DataController dataController = DataController.Initialyze();
+        private DataController dataController = DataController.Initialyze(ConfigurationManager.AppSettings.Get("Path"));
 
         private static ServerController serverController = null;
         protected ServerController()
@@ -29,21 +32,23 @@ namespace Server
             return serverController;
         }
 
-        public async Task ReceiveDataForReadAsync()
+        public async Task ReceiveDataForReadAsync() // Вывод данных
         {
-            using (UdpClient receiver = new UdpClient(localPort0))
+            using (UdpClient receiver = new UdpClient(localPortRead))
             {
                 while (true)
                 {
                     // получаем данные
                     var result = await receiver.ReceiveAsync();
                     var message = Encoding.UTF8.GetString(result.Buffer);
+
                     if (int.TryParse(message, out int index)) // Чтение по индексу
                     {
-                        Console.WriteLine(message);
+                        await SendMessageAsync(dataController.ReadData(index));
                         continue;
                     }
                     // Чтение файла полностью
+                    await SendMessageAsync(dataController.ReadData());
                 }
             }
         }
@@ -54,7 +59,7 @@ namespace Server
             {
                 byte[] data = Encoding.UTF8.GetBytes(message);
                 // и отправляем на 127.0.0.1:remotePort
-                await sender.SendAsync(data, message.Length, new IPEndPoint(localAddress, remotePort));
+                await sender.SendAsync(data, data.Length, new IPEndPoint(localAddress, remotePort));
             }
         }
     }

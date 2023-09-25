@@ -13,11 +13,12 @@ namespace AIS_LAB2
         static async Task Main(string[] args)
         {
             IPAddress localAddress = IPAddress.Parse("127.0.0.1");
-            int localPort = 3001;
+            int localPort = 2000;
             int remotePort = 3000;
 
 
             Console.WriteLine("Клиент запущен...");
+            Task.Run(ReceiveMessageAsync);
 
             await SendMessageAsync();
 
