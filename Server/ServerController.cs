@@ -16,6 +16,7 @@ namespace Server
         
         private int localPortRead = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortRead")); // для вывода данных
         private int localPortWrite = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortWrite")); // для добавления данных
+        private int localPortDelete = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortDelete"));
         private int remotePort = int.Parse(ConfigurationManager.AppSettings.Get("RemotePort"));
 
         private DataController dataController = DataController.Initialyze(ConfigurationManager.AppSettings.Get("Path"));
@@ -41,14 +42,69 @@ namespace Server
                     // получаем данные
                     var result = await receiver.ReceiveAsync();
                     var message = Encoding.UTF8.GetString(result.Buffer);
-
-                    if (int.TryParse(message, out int index)) // Чтение по индексу
+                    try
                     {
-                        await SendMessageAsync(dataController.ReadData(index));
-                        continue;
+                        if (int.TryParse(message, out int index)) // Чтение по индексу
+                        {
+                            await SendMessageAsync(dataController.ReadData(index));
+                            continue;
+                        }
+                        // Чтение файла полностью
+                        await SendMessageAsync(dataController.ReadData());
                     }
-                    // Чтение файла полностью
-                    await SendMessageAsync(dataController.ReadData());
+                    catch(Exception e)
+                    {
+                        await SendMessageAsync(e.Message);
+                    }
+                }
+            }
+        }
+
+        public async Task ReceiveDataForWriteAsync()
+        {
+            using (UdpClient receiver = new UdpClient(localPortWrite))
+            {
+                while (true)
+                {
+                    var result = await receiver.ReceiveAsync();
+                    var message = Encoding.UTF8.GetString(result.Buffer);
+                    try
+                    {
+                        dataController.WriteData(message);
+                        await SendMessageAsync("Добавление машины прошло успешно");
+                    }
+                    catch (Exception e)
+                    {
+                        await SendMessageAsync(e.Message);
+                    }
+                }
+            }
+        }
+
+        public async Task RecieveDataForDeleteAync()
+        {
+            using (UdpClient receiver = new UdpClient(localPortDelete))
+            {
+                while (true)
+                {
+                    var result = await receiver.ReceiveAsync();
+                    var message = Encoding.UTF8.GetString(result.Buffer);
+                    try
+                    {
+                        if (int.TryParse(message, out int index)) // Чтение по индексу
+                        {
+                            dataController.DeleteData(index);
+                            await SendMessageAsync("Удаление записи прошло успешно");
+                            continue;
+                        }
+                        // Чтение файла полностью
+                        dataController.DeleteData();
+                        await SendMessageAsync("Все записи удалены");
+                    }
+                    catch (Exception e)
+                    {
+                        await SendMessageAsync(e.Message);
+                    }
                 }
             }
         }
