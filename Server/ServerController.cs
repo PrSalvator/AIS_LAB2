@@ -12,7 +12,7 @@ namespace Server
 {
     class ServerController
     {
-        private IPAddress localAddress = IPAddress.Parse("127.0.0.1");
+        private IPAddress localAddress = IPAddress.Parse(ConfigurationManager.AppSettings.Get("LocalAddress"));
         
         private int localPortRead = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortRead")); // для вывода данных
         private int localPortWrite = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortWrite")); // для добавления данных
@@ -46,15 +46,15 @@ namespace Server
                     {
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
-                            await SendMessageAsync(dataController.ReadData(index));
+                            SendMessageAsync(dataController.ReadData(index));
                             continue;
                         }
                         // Чтение файла полностью
-                        await SendMessageAsync(dataController.ReadData());
+                        SendMessageAsync(dataController.ReadData());
                     }
                     catch(Exception e)
                     {
-                        await SendMessageAsync(e.Message);
+                        SendMessageAsync(e.Message);
                     }
                 }
             }
@@ -71,17 +71,17 @@ namespace Server
                     try
                     {
                         dataController.WriteData(message);
-                        await SendMessageAsync("Добавление машины прошло успешно");
+                        SendMessageAsync("Добавление машины прошло успешно");
                     }
                     catch (Exception e)
                     {
-                        await SendMessageAsync(e.Message);
+                        SendMessageAsync(e.Message);
                     }
                 }
             }
         }
 
-        public async Task RecieveDataForDeleteAync()
+        public async Task RecieveDataForDeleteAsync()
         {
             using (UdpClient receiver = new UdpClient(localPortDelete))
             {
@@ -94,16 +94,17 @@ namespace Server
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
                             dataController.DeleteData(index);
-                            await SendMessageAsync("Удаление записи прошло успешно");
+                            SendMessageAsync("Удаление записи прошло успешно");
+                            
                             continue;
                         }
                         // Чтение файла полностью
                         dataController.DeleteData();
-                        await SendMessageAsync("Все записи удалены");
+                        SendMessageAsync("Все записи удалены");
                     }
                     catch (Exception e)
                     {
-                        await SendMessageAsync(e.Message);
+                        SendMessageAsync(e.Message);
                     }
                 }
             }
@@ -114,8 +115,9 @@ namespace Server
             using (UdpClient sender = new UdpClient())
             {
                 byte[] data = Encoding.UTF8.GetBytes(message);
+                await Task.Delay(2000);
                 // и отправляем на 127.0.0.1:remotePort
-                await sender.SendAsync(data, data.Length, new IPEndPoint(localAddress, remotePort));
+                int a = await sender.SendAsync(data, data.Length, new IPEndPoint(localAddress, remotePort));
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Server
 
             Task.Run(serverController.ReceiveDataForWriteAsync);
 
-            Task.Run(serverController.RecieveDataForDeleteAync);
+            Task.Run(serverController.RecieveDataForDeleteAsync);
 
             Console.ReadKey();
 
