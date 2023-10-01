@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using System.Collections.Specialized;
+using NLog;
 
 namespace Server
 {
@@ -22,6 +23,9 @@ namespace Server
         private DataController dataController = DataController.Initialyze(ConfigurationManager.AppSettings.Get("Path"));
 
         private static ServerController serverController = null;
+
+        private Logger logger = LogManager.GetCurrentClassLogger();
+
         protected ServerController()
         {
 
@@ -46,15 +50,18 @@ namespace Server
                     {
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
-                            await SendMessageAsync(dataController.ReadData(index));
+                            SendMessageAsync(dataController.ReadData(index));
+                            logger.Trace("Чтение записи прошло успешно");
                             continue;
                         }
                         // Чтение файла полностью
-                        await SendMessageAsync(dataController.ReadData());
+                        SendMessageAsync(dataController.ReadData());
+                        logger.Trace("Чтение записи прошло успешно");
                     }
                     catch(Exception e)
                     {
-                        await SendMessageAsync(e.Message);
+                        SendMessageAsync(e.Message);
+                        logger.Warn(e.Message);
                     }
                 }
             }
@@ -71,11 +78,13 @@ namespace Server
                     try
                     {
                         dataController.WriteData(message);
-                        await SendMessageAsync("Добавление машины прошло успешно");
+                        SendMessageAsync("Добавление машины прошло успешно");
+                        logger.Trace("Добавление машины прошло успешно");
                     }
                     catch (Exception e)
                     {
-                        await SendMessageAsync(e.Message);
+                        SendMessageAsync(e.Message);
+                        logger.Warn(e.Message);
                     }
                 }
             }
@@ -94,16 +103,19 @@ namespace Server
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
                             dataController.DeleteData(index);
-                            await SendMessageAsync("Удаление записи прошло успешно");
+                            SendMessageAsync("Удаление записи прошло успешно");
+                            logger.Info("Удаление записи прошло успешно");
                             continue;
                         }
                         // Чтение файла полностью
                         dataController.DeleteData();
-                        await SendMessageAsync("Все записи удалены");
+                        SendMessageAsync("Все записи удалены");
+                        logger.Trace("Все записи удалены");
                     }
                     catch (Exception e)
                     {
-                       await SendMessageAsync(e.Message);
+                       SendMessageAsync(e.Message);
+                       logger.Warn(e.Message);
                     }
                 }
             }

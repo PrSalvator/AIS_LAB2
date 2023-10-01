@@ -10,7 +10,7 @@ namespace Server
 {
     class ServerView
     {
-        static async Task Main(string[] args)
+        static void Main(string[] args)
         {
             ServerController serverController = ServerController.Initialize();
 
