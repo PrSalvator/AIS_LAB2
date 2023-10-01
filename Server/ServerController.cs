@@ -46,15 +46,15 @@ namespace Server
                     {
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
-                            SendMessageAsync(dataController.ReadData(index));
+                            await SendMessageAsync(dataController.ReadData(index));
                             continue;
                         }
                         // Чтение файла полностью
-                        SendMessageAsync(dataController.ReadData());
+                        await SendMessageAsync(dataController.ReadData());
                     }
                     catch(Exception e)
                     {
-                        SendMessageAsync(e.Message);
+                        await SendMessageAsync(e.Message);
                     }
                 }
             }
@@ -71,11 +71,11 @@ namespace Server
                     try
                     {
                         dataController.WriteData(message);
-                        SendMessageAsync("Добавление машины прошло успешно");
+                        await SendMessageAsync("Добавление машины прошло успешно");
                     }
                     catch (Exception e)
                     {
-                        SendMessageAsync(e.Message);
+                        await SendMessageAsync(e.Message);
                     }
                 }
             }
@@ -94,22 +94,20 @@ namespace Server
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
                             dataController.DeleteData(index);
-                            SendMessageAsync("Удаление записи прошло успешно");
-                            
+                            await SendMessageAsync("Удаление записи прошло успешно");
                             continue;
                         }
                         // Чтение файла полностью
                         dataController.DeleteData();
-                        SendMessageAsync("Все записи удалены");
+                        await SendMessageAsync("Все записи удалены");
                     }
                     catch (Exception e)
                     {
-                        SendMessageAsync(e.Message);
+                       await SendMessageAsync(e.Message);
                     }
                 }
             }
         }
-
         public async Task SendMessageAsync(string message)
         {
             using (UdpClient sender = new UdpClient())
