@@ -1,5 +1,4 @@
-﻿using ClassLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -15,7 +14,8 @@ namespace Server
             
         }
 
-        public DbSet<Car> Cars { get; set; }
-
+        public DbSet<Models.Car> Cars { get; set; }
+        public DbSet<Models.BodyType> BodyTypes { get; set; }
+        public DbSet<Models.CarType> CarTypes { get; set; }
     }
 }

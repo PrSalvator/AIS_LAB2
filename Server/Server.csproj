@@ -74,6 +74,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataBase\DataBaseContext.cs" />
+    <Compile Include="Migrations\202310061249584_InitialCreate.cs" />
+    <Compile Include="Migrations\202310061249584_InitialCreate.designer.cs">
+      <DependentUpon>202310061249584_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061329125_ChangeTypeOfNameOfCarType.cs" />
+    <Compile Include="Migrations\202310061329125_ChangeTypeOfNameOfCarType.designer.cs">
+      <DependentUpon>202310061329125_ChangeTypeOfNameOfCarType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061608052_AddRequired.cs" />
+    <Compile Include="Migrations\202310061608052_AddRequired.designer.cs">
+      <DependentUpon>202310061608052_AddRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061655508_AddIdentityAndRequiredToTypesTables.cs" />
+    <Compile Include="Migrations\202310061655508_AddIdentityAndRequiredToTypesTables.designer.cs">
+      <DependentUpon>202310061655508_AddIdentityAndRequiredToTypesTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202310061705005_ChangeIDtoINT.cs" />
+    <Compile Include="Migrations\202310061705005_ChangeIDtoINT.designer.cs">
+      <DependentUpon>202310061705005_ChangeIDtoINT.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BodyType.cs" />
     <Compile Include="Models\Car.cs" />
     <Compile Include="Models\CarType.cs" />
@@ -109,6 +130,23 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202310061249584_InitialCreate.resx">
+      <DependentUpon>202310061249584_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061329125_ChangeTypeOfNameOfCarType.resx">
+      <DependentUpon>202310061329125_ChangeTypeOfNameOfCarType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061608052_AddRequired.resx">
+      <DependentUpon>202310061608052_AddRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061655508_AddIdentityAndRequiredToTypesTables.resx">
+      <DependentUpon>202310061655508_AddIdentityAndRequiredToTypesTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202310061705005_ChangeIDtoINT.resx">
+      <DependentUpon>202310061705005_ChangeIDtoINT.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -12,19 +12,28 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            ServerController serverController = ServerController.Initialize();
-
-            Console.WriteLine("UDP-сервер запущен");
-
-            Task.Run(serverController.ReceiveDataForReadAsync);
-
-            Task.Run(serverController.ReceiveDataForWriteAsync);
-
-            Task.Run(serverController.RecieveDataForDeleteAsync);
-
+            using (DataBaseContext DataBaseContext = new DataBaseContext())
+            {
+                var carTypes = DataBaseContext.CarTypes;
+                foreach(Models.CarType carType in carTypes)
+                {
+                    Console.WriteLine(carType.Name);
+                }
+            }
             Console.ReadKey();
+            //    ServerController serverController = ServerController.Initialize();
 
-          
+            //    Console.WriteLine("UDP-сервер запущен");
+
+            //    Task.Run(serverController.ReceiveDataForReadAsync);
+
+            //    Task.Run(serverController.ReceiveDataForWriteAsync);
+
+            //    Task.Run(serverController.RecieveDataForDeleteAsync);
+
+            //    Console.ReadKey();
+
+
         }
     }
 }

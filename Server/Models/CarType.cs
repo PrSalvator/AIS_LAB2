@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,10 +9,12 @@ using Server.Models;
 
 namespace Server.Models
 {
-    class CarType
+    public class CarType
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public int Name { get; set; }
+        [Required]
+        public string Name { get; set; }
         public ICollection<Car> Cars { get; set; }
         public CarType()
         {

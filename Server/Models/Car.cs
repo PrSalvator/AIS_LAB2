@@ -1,63 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Server.Models
 {
     public class Car
     {
-        public int Number_of_doors
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        public int NumberOfDoors
         {
             get
             {
-                return number_of_doors;
+                return numberOfDoors;
             }
             set
             {
                 if (value < 0)
                 {
-                    number_of_doors = 1;
+                    numberOfDoors = 1;
                 }
                 else if (value > 5)
                 {
-                    number_of_doors = 5;
+                    numberOfDoors = 5;
                 }
                 else
                 {
-                    number_of_doors = value;
+                    numberOfDoors = value;
                 }
             }
         }
-        public int Amount_of_horsepower
+        public int AmountOfHorsepower
         {
             get
             {
-                return amount_of_horsepower;
+                return amountOfHorsepower;
             }
             set
             {
                 if (value < 0)
                 {
-                    amount_of_horsepower = 1;
+                    amountOfHorsepower = 1;
                 }
                 else if (value > 2028)
                 {
-                    amount_of_horsepower = 2028;
+                    amountOfHorsepower = 2028;
                 }
                 else
                 {
-                    amount_of_horsepower = value;
+                    amountOfHorsepower = value;
                 }
             }
         }
 
-        public string Car_brand { get; set; }
+        [Required]
+        public string CarBrand { get; set; }
+        [Required]
+        public string CarModel { get; set; }
+        [Required]
+        public bool IsElectricCar { get; set; }
 
-        public string Car_model { get; set; }
+        public int? CarTypeId { get; set; }
+        public CarType CarType { get; set; }
 
-        public bool Is_electric_car { get; set; }
-
-        public string Car_type { get; set; }
-
-        public string Body_type { get; set; }
+        public int? BodyTypeId { get; set; }
+        public BodyType BodyType { get; set; }
         
 
         private Car()
@@ -73,9 +81,9 @@ namespace Server.Models
 
         private static Car car = null;
 
-        private int number_of_doors;
+        private int numberOfDoors;
 
-        private int amount_of_horsepower;
+        private int amountOfHorsepower;
 
 
 
