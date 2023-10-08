@@ -18,4 +18,5 @@ namespace Server
         public DbSet<Models.BodyType> BodyTypes { get; set; }
         public DbSet<Models.CarType> CarTypes { get; set; }
     }
+
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Data.SqlClient;
 
 namespace Server
 {
@@ -12,13 +13,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            using (DataBaseContext DataBaseContext = new DataBaseContext())
+            using (DataBaseContext db = new DataBaseContext())
             {
-                var carTypes = DataBaseContext.CarTypes;
-                foreach(Models.CarType carType in carTypes)
-                {
-                    Console.WriteLine(carType.Name);
-                }
+                SqlParameter param = new SqlParameter("@INDEX", 3);
+                db.Database.ExecuteSqlCommand("exec DeleteCars @INDEX", param);
             }
             Console.ReadKey();
             //    ServerController serverController = ServerController.Initialize();
