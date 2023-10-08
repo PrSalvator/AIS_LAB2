@@ -13,12 +13,12 @@ namespace Server
 {
     class ServerController
     {
-        //private IPAddress localAddress = IPAddress.Parse(ConfigurationManager.AppSettings.Get("LocalAddress"));
-        
-        //private int localPortRead = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortRead")); // для вывода данных
-        //private int localPortWrite = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortWrite")); // для добавления данных
-        //private int localPortDelete = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortDelete"));
-        //private int remotePort = int.Parse(ConfigurationManager.AppSettings.Get("RemotePort"));
+        private IPAddress localAddress = IPAddress.Parse(ConfigurationManager.AppSettings.Get("LocalAddress"));
+
+        private int localPortRead = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortRead")); // для вывода данных
+        private int localPortWrite = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortWrite")); // для добавления данных
+        private int localPortDelete = int.Parse(ConfigurationManager.AppSettings.Get("LocalPortDelete"));
+        private int remotePort = int.Parse(ConfigurationManager.AppSettings.Get("RemotePort"));
 
         //private DataController dataController = DataController.Initialyze(ConfigurationManager.AppSettings.Get("Path"));
 
