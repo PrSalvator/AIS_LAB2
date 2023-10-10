@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -9,22 +10,22 @@ namespace Server.Controllers
 {
     public class DataController
     {
-        public List<Models.CarType> CarTypes = new List<Models.CarType>();
-        public List<Models.BodyType> BodyTypes = new List<Models.BodyType>();
+        //public List<Models.CarType> CarTypes = new List<Models.CarType>();
+        //public List<Models.BodyType> BodyTypes = new List<Models.BodyType>();
         private static DataController dataController = null;
         private DataController() { }
-        public DataController Initialyze()
+        public static DataController Initialyze()
         {
             if (dataController == null) dataController = new DataController();
-            dataController.CarTypes = GetCarTypes();
-            dataController.BodyTypes = GetBodyTypes();
+            //dataController.CarTypes = GetCarTypes();
+            //dataController.BodyTypes = GetBodyTypes();
             return dataController;
         }
-        public void Add()
+        public void AddCar(Models.Car car)
         {
             using (DataBaseContext db = new DataBaseContext())
             {
-                
+                db.Cars.Add(car);
             }
 
         }
