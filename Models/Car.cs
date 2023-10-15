@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace Server.Models
+namespace AIS_LAB2.Models
 {
-    public class Car
+    class Car
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int NumberOfDoors
         {
@@ -54,11 +55,8 @@ namespace Server.Models
             }
         }
 
-        [Required]
         public string CarBrand { get; set; }
-        [Required]
         public string CarModel { get; set; }
-        [Required]
         public bool IsElectricCar { get; set; }
 
         public int? CarTypeId { get; set; }
@@ -66,7 +64,7 @@ namespace Server.Models
 
         public int? BodyTypeId { get; set; }
         public BodyType BodyType { get; set; }
-        
+
 
         public Car()
         {
@@ -84,8 +82,5 @@ namespace Server.Models
         private int numberOfDoors;
 
         private int amountOfHorsepower;
-
-
-
     }
 }

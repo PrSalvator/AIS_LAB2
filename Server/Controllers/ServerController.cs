@@ -10,6 +10,7 @@ using System.Collections.Specialized;
 using NLog;
 using Server.Controllers;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Server
 {
@@ -29,6 +30,12 @@ namespace Server
         private static ServerController serverController = null;
 
         private Logger logger = LogManager.GetCurrentClassLogger();
+
+        private JsonSerializerOptions options = new JsonSerializerOptions()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
 
         protected ServerController()
         {
@@ -55,12 +62,12 @@ namespace Server
                         if (int.TryParse(message, out int index)) // Чтение по индексу
                         {
                             
-                            SendMessageAsync(JsonSerializer.Serialize(dataController.GetCar(index)));
+                            SendMessageAsync(JsonSerializer.Serialize(dataController.GetCar(index), options));
                             logger.Trace("Чтение записи прошло успешно");
                             continue;
                         }
                         // Чтение файла полностью
-                        SendMessageAsync(JsonSerializer.Serialize(dataController.GetCars()));
+                        SendMessageAsync(JsonSerializer.Serialize(dataController.GetCars(), options));
                         logger.Trace("Чтение записи прошло успешно");
                     }
                     catch (Exception e)
@@ -156,7 +163,6 @@ namespace Server
             using (UdpClient sender = new UdpClient())
             {
                 byte[] data = Encoding.UTF8.GetBytes(message);
-                await Task.Delay(2000);
                 // и отправляем на 127.0.0.1:remotePort
                 int a = await sender.SendAsync(data, data.Length, new IPEndPoint(localAddress, remotePort));
             }

@@ -2,19 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-using ClassLibrary;
 using System.Configuration;
+using System.Threading;
+using System.Text.Json.Serialization;
 
 namespace AIS_LAB2
 {
     class ClientView
     {
-        async void Print()
+        private static Dictionary<int, T> CreateDictionary<T>(List<T> list)
         {
-            
+            Dictionary<int, T> dictionary = new Dictionary<int, T>();
+            for (int i = 0; i < list.Count(); i++)
+            {
+                dictionary.Add(i, list[i]);
+            }
+            return dictionary;
+        }
+        private static void PrintCar(Models.Car car)
+        {
+            Console.WriteLine(
+                $"{car.Id} " + 
+                $"{car.CarBrand} " + 
+                $"{car.CarModel} " + 
+                $"{car.CarType.Name} " + 
+                $"{car.BodyType.Name} " +
+                $"{car.NumberOfDoors} " + 
+                $"{car.AmountOfHorsepower} " +
+                $"{car.IsElectricCar}");
         }
         static void Main(string[] args)
         {
@@ -26,14 +45,49 @@ namespace AIS_LAB2
             int remotePortWrite = int.Parse(ConfigurationManager.AppSettings.Get("RemotePortWrite"));
             int remotePortDelete = int.Parse(ConfigurationManager.AppSettings.Get("RemotePortDelete"));
 
-            ClientController clientController = ClientController.Initialyze();
+            Dictionary<int, Models.BodyType> bodyTypes = new Dictionary<int, Models.BodyType>();
+            Dictionary<int, Models.CarType> carTypes = new Dictionary<int, Models.CarType>();
 
-            Car car = Car.Initialyze();
+            List<Models.Car> cars = new List<Models.Car>();
 
-            //Task.Run();
+            JsonSerializerOptions options = new JsonSerializerOptions()
+            {
+                ReferenceHandler = ReferenceHandler.Preserve,
+                WriteIndented = true
+            };
+
+            Controllers.ClientController clientController = Controllers.ClientController.Initialyze();
+
+            Models.Car car = Models.Car.Initialyze();
+
+            Thread.Sleep(1000);
+            
+            try
+            {
+                bodyTypes = CreateDictionary(clientController.GetBodyTypes());
+                carTypes = CreateDictionary(clientController.GetCarTypes());
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey();
+                return;
+            }
+
+            try 
+            {
+                 cars = JsonSerializer.Deserialize<List<Models.Car>>(clientController.SendMessage(remotePortRead), options);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey();
+                return;
+            }
+
             while (true)
             {
-                
+
                 Console.WriteLine(
                     "Нажмите 1 для добавления автомобиля \n" +
                     "Нажмите 2 для вывода всех автомобилей \n" +
@@ -48,49 +102,49 @@ namespace AIS_LAB2
                 switch (button)
                 {
                     case ConsoleKey.Escape:
-                        return ;
+                        return;
 
                     case ConsoleKey.D1:
 
                         Console.WriteLine("Введите марку автомобиля");
-                        car.Car_brand = Console.ReadLine();
+                        car.CarBrand = Console.ReadLine();
 
                         Console.WriteLine("Введите модель автомобиля");
-                        car.Car_model = Console.ReadLine();
+                        car.CarModel = Console.ReadLine();
 
                         Console.WriteLine("Выберите тип кузова");
-                        foreach (var body in car.Bodies)
+                        foreach (var body in bodyTypes)
                         {
-                            Console.WriteLine($"{ body.Key } - { body.Value }");
+                            Console.WriteLine($"{ body.Key } - { body.Value.Name }");
                         }
 
                         choose = Console.ReadLine();
 
-                        if (!Validator.In_Interval(0, car.Bodies.Count - 1, choose))
+                        if (!Validator.In_Interval(0, bodyTypes.Count() - 1, choose))
                         {
                             Console.WriteLine("Некорректный ввод");
                             Console.WriteLine();
                             break;
                         }
 
-                        car.Body_type = car.Bodies[int.Parse(choose)];
+                        car.BodyTypeId = bodyTypes[int.Parse(choose)].Id;
 
                         Console.WriteLine("Выберите тип автомобиля");
-                        foreach (var type in car.Types)
+                        foreach (var type in carTypes)
                         {
-                            Console.WriteLine($"{ type.Key } - { type.Value }");
+                            Console.WriteLine($"{ type.Key } - { type.Value.Name }");
                         }
 
                         choose = Console.ReadLine();
 
-                        if (!Validator.In_Interval(0, car.Bodies.Count - 1, choose))
+                        if (!Validator.In_Interval(0, carTypes.Count() - 1, choose))
                         {
                             Console.WriteLine("Некорректный ввод");
                             Console.WriteLine();
                             break;
                         }
 
-                        car.Car_type = car.Types[int.Parse(choose)];
+                        car.CarTypeId = carTypes[int.Parse(choose)].Id;
 
                         Console.WriteLine("Введите количество дверей");
                         choose = Console.ReadLine();
@@ -101,7 +155,7 @@ namespace AIS_LAB2
                             break;
                         }
 
-                        car.Number_of_doors = int.Parse(choose);
+                        car.NumberOfDoors = int.Parse(choose);
 
                         Console.WriteLine("Введите количество лошадиных сил");
                         choose = Console.ReadLine();
@@ -112,7 +166,7 @@ namespace AIS_LAB2
                             break;
                         }
 
-                        car.Amount_of_horsepower = int.Parse(choose);
+                        car.AmountOfHorsepower = int.Parse(choose);
 
                         Console.WriteLine("Машина работает на электричестве? [Y/N]");
                         ConsoleKey key = new ConsoleKey();
@@ -121,40 +175,32 @@ namespace AIS_LAB2
                             key = Console.ReadKey(true).Key;
                             if (key == ConsoleKey.Y)
                             {
-                                car.Is_electric_car = true;
+                                car.IsElectricCar = true;
                                 break;
                             }
                             else if (key == ConsoleKey.N)
                             {
-                                car.Is_electric_car = false;
+                                car.IsElectricCar = false;
                                 break;
                             }
                         }
-
-                        message = $"{car.Car_brand}; {car.Car_model}; {car.Car_type}; {car.Body_type}; {car.Amount_of_horsepower}; {car.Number_of_doors}; {car.Is_electric_car};";
-                        var answer = clientController.SendMessageAsync(remotePortWrite, message);
+                        var answer = clientController.SendMessage(remotePortWrite, JsonSerializer.Serialize(car));
+                        cars.Clear();
+                        cars = JsonSerializer.Deserialize<List<Models.Car>>(clientController.SendMessage(remotePortRead), options);
                         Console.WriteLine(answer);
-
                         Console.WriteLine();
                         break;
 
                     case ConsoleKey.D2:
-                        string[] data = clientController.SendMessageAsync(remotePortRead).Split('\n');
-                        int counter = 0;
-                        foreach (string str in data)
+                        foreach (var _car in cars)
                         {
-                            string _str = str.Replace(";", "");
-                            if (_str != "")
-                            {
-                                Console.WriteLine($"{counter} {_str}");
-                                counter++;
-                            }
+                            PrintCar(_car);
                         }
                         Console.WriteLine();
                         break;
 
                     case ConsoleKey.D3:
-                        Console.WriteLine("Введите номер записи");
+                        Console.WriteLine("Введите ID машины");
                         index = Console.ReadLine();
                         if (!Validator.Is_Letter(index))
                         {
@@ -162,11 +208,19 @@ namespace AIS_LAB2
                             Console.WriteLine();
                             break;
                         }
-                        Console.WriteLine(clientController.SendMessageAsync(remotePortRead, index).Replace(";", ""));
+                        try
+                        {
+                            PrintCar(cars[cars.FindIndex(c => c.Id == int.Parse(index))]);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         break;
 
                     case ConsoleKey.D4:
-                        Console.WriteLine(clientController.SendMessageAsync(remotePortDelete));
+                        clientController.SendMessage(remotePortDelete);
+                        cars.Clear();
                         Console.WriteLine();
                         break;
 
@@ -178,7 +232,17 @@ namespace AIS_LAB2
                             Console.WriteLine("Некорректный ввод");
                             break;
                         }
-                        Console.WriteLine(clientController.SendMessageAsync(remotePortDelete, index));
+                        try
+                        {
+                            cars.RemoveAt(cars.FindIndex(c => c.Id == int.Parse(index)));
+                            Console.WriteLine(clientController.SendMessage(remotePortDelete, index));
+                            cars.Clear();
+                            cars = JsonSerializer.Deserialize<List<Models.Car>>(clientController.SendMessage(remotePortRead), options);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                         Console.WriteLine();
                         break;
                 }

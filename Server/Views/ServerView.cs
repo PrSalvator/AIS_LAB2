@@ -15,9 +15,6 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            DataController dataController = DataController.Initialyze();
-            
-            Console.ReadKey();
             ServerController serverController = ServerController.Initialize();
 
             Console.WriteLine("UDP-сервер запущен");

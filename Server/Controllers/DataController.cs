@@ -26,6 +26,7 @@ namespace Server.Controllers
             using (DataBaseContext db = new DataBaseContext())
             {
                 db.Cars.Add(car);
+                db.SaveChanges();
             }
 
         }
@@ -35,6 +36,7 @@ namespace Server.Controllers
             {
                 SqlParameter param = new SqlParameter("@INDEX", index);
                 db.Database.ExecuteSqlCommand("exec DeleteCars @INDEX", param);
+                db.SaveChanges();
             }
         }
         public void DeleteCars()
@@ -42,20 +44,21 @@ namespace Server.Controllers
             using (DataBaseContext db = new DataBaseContext())
             {
                 db.Database.ExecuteSqlCommand("exec DeleteCars");
+                db.SaveChanges();
             }
         }
         public Models.Car GetCar(int index)
         {
             using (DataBaseContext db = new DataBaseContext())
             {
-                return (Models.Car)db.Cars.Where(p => p.Id == index);
+                return (Models.Car)db.Cars.Include(p => p.CarType).Include(p => p.BodyType).Where(p => p.Id == index);
             }
         }
         public List<Models.Car> GetCars()
         {
             using (DataBaseContext db = new DataBaseContext())
             {
-                return db.Cars.ToList();
+                return db.Cars.Include(p => p.CarType).Include(p => p.BodyType).ToList();
             }
         }
         public List<Models.CarType> GetCarTypes()
