@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AIS_LAB2.Controllers
 {
-    class ClientController
+    public class ClientController
     {
 
 

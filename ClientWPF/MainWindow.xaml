@@ -1,0 +1,48 @@
+﻿<Window x:Class="ClientWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientWPF" 
+        xmlns:viewmodel="clr-namespace:ClientWPF.ViewModels"
+        mc:Ignorable="d"
+        Title="Машинки" Height="450" Width="1200">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="CarTypesProvider" ObjectType="{x:Type viewmodel:CarTypesObservableCollection}"
+                            MethodName="GetCarTypes"/>
+        <ObjectDataProvider x:Key="BodyTypesProvider" ObjectType="{x:Type viewmodel:BodyTypesObservableCollection}"
+                            MethodName="GetBodyTypes"/>
+    </Window.Resources>
+    <!--<viewmodel:CarTypesObservableCollection x:Key="CarTypes"></viewmodel:CarTypesObservableCollection>-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="CarsDataGrid" 
+                  Margin="10"
+                  ItemsSource="{Binding Cars}" 
+                  AutoGenerateColumns="False" Grid.ColumnSpan="2"
+                  BeginningEdit="CarsDataGrid_BeginningEdit">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Брэнд" Binding="{Binding Path=CarBrand}" Width="0.4*"/>
+                <DataGridTextColumn Header="Модель" Binding="{Binding Path=CarModel}" Width="0.4*"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource BodyTypesProvider}}" DisplayMemberPath="Name" TextBinding="{Binding BodyType.Name}" Header="Модель кузова" Width="0.4*"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource CarTypesProvider}}" DisplayMemberPath="Name"  TextBinding="{Binding CarType.Name}" Header="Тип автомобиля" Width="0.6*"/>
+                <DataGridTextColumn Header="Количество дверей" Binding="{Binding Path=NumberOfDoors}" Width="0.45*"/>
+                <DataGridTextColumn Header="Количество лошадинных сил" Binding="{Binding Path=AmountOfHorsepower}" Width="0.6*"/>
+                <DataGridCheckBoxColumn Header="Работает на электричестве" Binding="{Binding Path=IsElectricCar}" Width="0.5*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Width="100" Content="Удалить" Margin="10 0 10 10" HorizontalAlignment="Left"/>
+            <Button Width="100" Content="Добавить" Margin="10 0 10 10" HorizontalAlignment="Left"/>
+        </StackPanel>
+       
+        
+    </Grid>
+</Window>

@@ -14,6 +14,7 @@ namespace AIS_LAB2
 {
     class ClientView
     {
+        
         private static Dictionary<int, T> CreateDictionary<T>(List<T> list)
         {
             Dictionary<int, T> dictionary = new Dictionary<int, T>();

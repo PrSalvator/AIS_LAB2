@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AIS_LAB2.Models
 {
-    class CarType
+    public class CarType
     {
         public int Id { get; set; }
         public string Name { get; set; }
