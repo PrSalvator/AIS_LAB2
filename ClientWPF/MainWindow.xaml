@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientWPF" 
         xmlns:viewmodel="clr-namespace:ClientWPF.ViewModels"
+        xmlns:validation="clr-namespace:ClientWPF.Validation"
         mc:Ignorable="d"
         Title="Машинки" Height="450" Width="1200">
     <Window.Resources>
@@ -27,16 +28,71 @@
                   Margin="10"
                   ItemsSource="{Binding Cars}" 
                   AutoGenerateColumns="False" Grid.ColumnSpan="2"
-                  BeginningEdit="CarsDataGrid_BeginningEdit">
+                  BeginningEdit="CarsDataGrid_BeginningEdit"
+                  RowEditEnding="CarsDataGrid_RowEditEnding"
+                  SelectedItem="{Binding SelectedCar}">
+                <DataGrid.Resources>
+                    <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
+                        <Setter Property="Padding" Value="-2"/>
+                        <Style.Triggers>
+                            <Trigger Property="Validation.HasError" Value="True">
+                                <Setter Property="Background" Value="Red"/>
+                                <Setter Property="ToolTip" 
+                    Value="{Binding RelativeSource={RelativeSource Self},
+                      Path=(Validation.Errors)[0].ErrorContent}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Брэнд" Binding="{Binding Path=CarBrand}" Width="0.4*"/>
-                <DataGridTextColumn Header="Модель" Binding="{Binding Path=CarModel}" Width="0.4*"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource BodyTypesProvider}}" DisplayMemberPath="Name" TextBinding="{Binding BodyType.Name}" Header="Модель кузова" Width="0.4*"/>
-                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource CarTypesProvider}}" DisplayMemberPath="Name"  TextBinding="{Binding CarType.Name}" Header="Тип автомобиля" Width="0.6*"/>
-                <DataGridTextColumn Header="Количество дверей" Binding="{Binding Path=NumberOfDoors}" Width="0.45*"/>
-                <DataGridTextColumn Header="Количество лошадинных сил" Binding="{Binding Path=AmountOfHorsepower}" Width="0.6*"/>
-                <DataGridCheckBoxColumn Header="Работает на электричестве" Binding="{Binding Path=IsElectricCar}" Width="0.5*"/>
+                <DataGridTextColumn Header="Брэнд" 
+                                    EditingElementStyle="{StaticResource errorStyle}"
+                                    Binding="{Binding Path=CarBrand, 
+                                                UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, Mode=TwoWay, 
+                                                NotifyOnValidationError=True}"
+                                    Width="0.4*"/>
+                <DataGridTextColumn Header="Модель" 
+                                    EditingElementStyle="{StaticResource errorStyle}"
+                                    Binding="{Binding Path=CarModel, 
+                                                UpdateSourceTrigger=Explicit, ValidatesOnExceptions=True, Mode=TwoWay, 
+                                                NotifyOnValidationError=True}"
+                                    Width="0.4*"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource BodyTypesProvider}}" 
+                                        DisplayMemberPath="Name" TextBinding="{Binding BodyType.Name}"
+                                        SelectedValuePath="Id"
+                                        SelectedValueBinding="{Binding BodyTypeId, 
+                                                                Mode=TwoWay, UpdateSourceTrigger=Explicit,
+                                                                ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                                        Header="Модель кузова" Width="0.4*"/>
+                <DataGridComboBoxColumn ItemsSource="{Binding Source={StaticResource CarTypesProvider}}" 
+                                        DisplayMemberPath="Name"  TextBinding="{Binding CarType.Name}"
+                                        SelectedValuePath="Id"
+                                        SelectedValueBinding="{Binding CarTypeId, 
+                                                                Mode=TwoWay, UpdateSourceTrigger=Explicit,
+                                                                ValidatesOnDataErrors=True, NotifyOnValidationError=True}"
+                                        Header="Тип автомобиля" Width="0.6*"/>
+                <DataGridTextColumn Header="Количество дверей" Binding="{Binding Path=NumberOfDoors, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" Width="0.45*"/>
+                <DataGridTextColumn Header="Количество лошадинных сил" Binding="{Binding Path=AmountOfHorsepower, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" Width="0.6*"/>
+                <DataGridCheckBoxColumn Header="Работает на электричестве" Binding="{Binding Path=IsElectricCar, ValidatesOnDataErrors=True, UpdateSourceTrigger=LostFocus}" Width="0.5*"/>
             </DataGrid.Columns>
+            <DataGrid.RowValidationRules>
+                <validation:CarValidationRule ValidationStep="UpdatedValue"/>
+            </DataGrid.RowValidationRules>
+            <DataGrid.RowValidationErrorTemplate>
+                <ControlTemplate>
+                    <Grid Margin="0,-2,0,-2"
+            ToolTip="{Binding RelativeSource={RelativeSource
+            FindAncestor, AncestorType={x:Type DataGridRow}},
+            Path=(Validation.Errors)[0].ErrorContent}">
+                        <Ellipse StrokeThickness="0" Fill="Red" 
+              Width="{TemplateBinding FontSize}" 
+              Height="{TemplateBinding FontSize}" />
+                        <TextBlock Text="!" FontSize="{TemplateBinding FontSize}" 
+              FontWeight="Bold" Foreground="White" 
+              HorizontalAlignment="Center"  />
+                    </Grid>
+                </ControlTemplate>
+            </DataGrid.RowValidationErrorTemplate>
         </DataGrid>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button Width="100" Content="Удалить" Margin="10 0 10 10" HorizontalAlignment="Left"/>

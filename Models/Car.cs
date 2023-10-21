@@ -9,7 +9,7 @@ namespace AIS_LAB2.Models
 {
     public class Car
     {
-        public int? Id { get; set; }
+        public int Id { get; set; }
         public int NumberOfDoors
         {
             get

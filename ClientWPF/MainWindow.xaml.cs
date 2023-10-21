@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ClientWPF.Models;
 
 namespace ClientWPF
 {
@@ -23,7 +24,7 @@ namespace ClientWPF
     {
         public MainWindow()
         {
-            Thread.Sleep(500);
+            Thread.Sleep(2000);
             InitializeComponent();
             ViewModels.ViewModel VM = new ViewModels.ViewModel();
             DataContext = VM;
@@ -32,12 +33,19 @@ namespace ClientWPF
         private void CarsDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
         {
             DataGrid s = sender as DataGrid;
-            AIS_LAB2.Models.Car car = e.Row.Item as AIS_LAB2.Models.Car;
+            Car car = e.Row.Item as Car;
             if(!(car.Id is null))
             {
                 e.Cancel = true;
                 s.CancelEdit();
             }
+        }
+
+        private void CarsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        {
+            DataGrid s = sender as DataGrid;
+            DataGridRow r = sender as DataGridRow;
+            AIS_LAB2.Models.Car car = e.Row.Item as AIS_LAB2.Models.Car;
         }
     }
 }
