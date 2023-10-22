@@ -85,7 +85,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\Car.cs" />
-    <Compile Include="Validation\CarValidationRule.cs" />
+    <Compile Include="ValidationRules\CarValidationRule.cs" />
     <Compile Include="ViewModels\BodyTypesObservableCollection.cs" />
     <Compile Include="ViewModels\CarTypesObservableCollection.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />

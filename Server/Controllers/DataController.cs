@@ -27,6 +27,7 @@ namespace Server.Controllers
             {
                 db.Cars.Add(car);
                 db.SaveChanges();
+                int a = db.Database.ExecuteSqlCommand("Select MAX(Id) from Cars");
             }
 
         }

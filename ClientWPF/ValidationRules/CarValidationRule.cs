@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace ClientWPF.Validation
+namespace ClientWPF.ValidationRules
 {
     class CarValidationRule : ValidationRule
     {

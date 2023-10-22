@@ -39,59 +39,5 @@ namespace ClientWPF.Models
             inEdit = false;
             backUpCopy = null;
         }
-        //[NonSerialized]
-        //public bool Ready = false;
-        //[JsonIgnore]
-        //public string this[string columnName]
-        //{
-        //    get
-        //    {
-        //        string error = String.Empty;
-        //        switch (columnName)
-        //        {
-        //            case "CarBrand":
-        //                if (String.IsNullOrEmpty(CarBrand))
-        //                {
-        //                    error = "Введена пустая строка";
-        //                }
-        //                break;
-        //            case "CarModel":
-        //                if (String.IsNullOrEmpty(CarModel))
-        //                {
-        //                    error = "Введена пустая строка";
-        //                }
-        //                break;
-        //            case "CarType":
-        //                if(CarType == null)
-        //                {
-        //                    error = "Выберите тип машины";
-        //                }
-        //                break;
-        //            case "BodyType":
-        //                if(BodyType == null)
-        //                {
-        //                    error = "Выберите тип кузова";
-        //                }
-        //                break;
-        //            case "NumberOfDoors":
-        //                if(NumberOfDoors<1 || NumberOfDoors > 5){
-        //                    error = "Введите число в диапозоне от 1 до 5";
-        //                }
-        //                break;
-        //            case "AmountOfHorsepower":
-        //                if(AmountOfHorsepower<1 || AmountOfHorsepower > 2028)
-        //                {
-        //                    error = "Введите число в диапозоне от 1 до 2028";
-        //                }
-        //                break;
-        //        }
-        //        return error;
-        //    }
-        //}
-        //[JsonIgnore]
-        //public string Error
-        //{
-        //    get { throw new NotImplementedException(); }
-        //}
     }
 }

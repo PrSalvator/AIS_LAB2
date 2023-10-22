@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ClientWPF" 
         xmlns:viewmodel="clr-namespace:ClientWPF.ViewModels"
-        xmlns:validation="clr-namespace:ClientWPF.Validation"
+        xmlns:validation="clr-namespace:ClientWPF.ValidationRules"
         mc:Ignorable="d"
         Title="Машинки" Height="450" Width="1200">
     <Window.Resources>
@@ -27,11 +27,9 @@
         <DataGrid x:Name="CarsDataGrid" 
                   Margin="10"
                   ItemsSource="{Binding Cars}" 
-                  AutoGenerateColumns="False" Grid.ColumnSpan="2"
-                  BeginningEdit="CarsDataGrid_BeginningEdit"
-                  RowEditEnding="CarsDataGrid_RowEditEnding"
+                  AutoGenerateColumns="False" Grid.ColumnSpan="2"      
                   SelectedItem="{Binding SelectedCar}">
-                <DataGrid.Resources>
+            <DataGrid.Resources>
                     <Style x:Key="errorStyle" TargetType="{x:Type TextBox}">
                         <Setter Property="Padding" Value="-2"/>
                         <Style.Triggers>
@@ -95,8 +93,7 @@
             </DataGrid.RowValidationErrorTemplate>
         </DataGrid>
         <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Button Width="100" Content="Удалить" Margin="10 0 10 10" HorizontalAlignment="Left"/>
-            <Button Width="100" Content="Добавить" Margin="10 0 10 10" HorizontalAlignment="Left"/>
+            <Button  Width="100" Content="Добавить" Margin="10 0 10 10" HorizontalAlignment="Left" Click="Button_Click"/>
         </StackPanel>
        
         

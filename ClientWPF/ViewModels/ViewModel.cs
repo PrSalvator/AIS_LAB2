@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Configuration;
 using ClientWPF.Models;
+using System.Threading;
 
 namespace ClientWPF.ViewModels
 {
@@ -32,15 +33,22 @@ namespace ClientWPF.ViewModels
 
         public ViewModel()
         {
+            Thread.Sleep(2000);
             cars = JsonSerializer.Deserialize<ObservableCollection<Car>>(controller.SendMessage(remotePortRead), options);
             cars.CollectionChanged += Cars_CollectionChanged;
         }
-
+        public void AddCar()
+        {
+            
+            //string massage = JsonSerializer.Serialize(car);
+            //controller.SendMessage(remotePortWrite, massage);
+        }
         private void Cars_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
             {
-
+                //
+                //
             }
             else if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
             {

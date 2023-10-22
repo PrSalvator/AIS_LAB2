@@ -14,7 +14,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ClientWPF.Models;
-
 namespace ClientWPF
 {
     /// <summary>
@@ -22,30 +21,41 @@ namespace ClientWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool access = false;
+        private int index = -1;
+        ViewModels.ViewModel VM = new ViewModels.ViewModel();
         public MainWindow()
         {
-            Thread.Sleep(2000);
+            this.AddHandler(Validation.ErrorEvent, new RoutedEventHandler(OnErrorEvent));
             InitializeComponent();
-            ViewModels.ViewModel VM = new ViewModels.ViewModel();
             DataContext = VM;
         }
 
-        private void CarsDataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        private void OnErrorEvent(object sender, RoutedEventArgs e)
         {
-            DataGrid s = sender as DataGrid;
-            Car car = e.Row.Item as Car;
-            if(!(car.Id is null))
+            var validationEventArgs = e as ValidationErrorEventArgs;
+            if (validationEventArgs == null)
+                throw new Exception("Unexpected event args");
+            switch (validationEventArgs.Action)
             {
-                e.Cancel = true;
-                s.CancelEdit();
+                case ValidationErrorEventAction.Added:
+                    {
+                        break;
+                    }
+                case ValidationErrorEventAction.Removed:
+                    {
+                        break;
+                    }
+                default:
+                    {
+                        throw new Exception("Unknown action");
+                    }
             }
         }
 
-        private void CarsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            DataGrid s = sender as DataGrid;
-            DataGridRow r = sender as DataGridRow;
-            AIS_LAB2.Models.Car car = e.Row.Item as AIS_LAB2.Models.Car;
+            
         }
     }
 }
