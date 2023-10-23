@@ -35,24 +35,29 @@ namespace ClientWPF.ViewModels
         {
             Thread.Sleep(2000);
             cars = JsonSerializer.Deserialize<ObservableCollection<Car>>(controller.SendMessage(remotePortRead), options);
-            cars.CollectionChanged += Cars_CollectionChanged;
+        }
+        public void DeleteCar()
+        {
+            if (!(SelectedCar is null))
+            { 
+                if (!(String.IsNullOrEmpty(SelectedCar.CarBrand) || String.IsNullOrEmpty(SelectedCar.CarModel) || SelectedCar.BodyTypeId is null || SelectedCar.CarTypeId is null))
+                {
+                    string answer = controller.SendMessage(remotePortDelete, SelectedCar.Id.ToString());
+                    Cars.Remove(SelectedCar);
+                }
+            }
         }
         public void AddCar()
         {
-            
-            //string massage = JsonSerializer.Serialize(car);
-            //controller.SendMessage(remotePortWrite, massage);
-        }
-        private void Cars_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            {
-                //
-                //
-            }
-            else if(e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Remove)
-            {
-                
+            if (!(SelectedCar is null))
+            { 
+                if (!(String.IsNullOrEmpty(SelectedCar.CarBrand) || String.IsNullOrEmpty(SelectedCar.CarModel) || SelectedCar.BodyTypeId is null || SelectedCar.CarTypeId is null))
+                {
+                    string massage = JsonSerializer.Serialize(SelectedCar);
+                    string answer = controller.SendMessage(remotePortWrite, massage);
+                    int id = int.Parse(answer);
+                    SelectedCar.Id = id;
+                }
             }
         }
 

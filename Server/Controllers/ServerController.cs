@@ -11,6 +11,7 @@ using NLog;
 using Server.Controllers;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 namespace Server
 {
@@ -67,7 +68,8 @@ namespace Server
                             continue;
                         }
                         // Чтение файла полностью
-                        SendMessageAsync(JsonSerializer.Serialize(dataController.GetCars(), options));
+                        var cars = JsonSerializer.Serialize(dataController.GetCars(), options);
+                        SendMessageAsync(cars);
                         logger.Trace("Чтение записи прошло успешно");
                     }
                     catch (Exception e)
@@ -89,8 +91,10 @@ namespace Server
                     string message = Encoding.UTF8.GetString(result.Buffer);
                     try
                     {
-                        dataController.AddCar(JsonSerializer.Deserialize<Models.Car>(message));
-                        SendMessageAsync("Добавление машины прошло успешно");
+                        await Task.Delay(1000);
+                        var car = JsonSerializer.Deserialize<Models.Car>(message);
+                        int? answer = dataController.AddCar(car);
+                        SendMessageAsync(answer.ToString());
                         logger.Trace("Добавление машины прошло успешно");
                     }
                     catch (Exception e)

@@ -21,13 +21,15 @@ namespace Server.Controllers
             //dataController.BodyTypes = GetBodyTypes();
             return dataController;
         }
-        public void AddCar(Models.Car car)
+        public int? AddCar(Models.Car car)
         {
             using (DataBaseContext db = new DataBaseContext())
             {
                 db.Cars.Add(car);
                 db.SaveChanges();
-                int a = db.Database.ExecuteSqlCommand("Select MAX(Id) from Cars");
+                //int id = db.Database.ExecuteSqlCommand("Select MAX(Id) from Cars");
+                int? id = db.Cars.OrderBy(c=>c.Id).First().Id;
+                return id;
             }
 
         }

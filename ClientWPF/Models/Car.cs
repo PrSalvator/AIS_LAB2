@@ -15,7 +15,7 @@ namespace ClientWPF.Models
         private Car backUpCopy;
         [NonSerialized]
         private bool inEdit;
-        public int? Id { get; set; }
+
         public void BeginEdit()
         {
             if (inEdit) return;

@@ -14,7 +14,7 @@ namespace ClientWPF.ValidationRules
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             Models.Car car = (value as BindingGroup).Items[0] as Models.Car;
-            if(String.IsNullOrEmpty(car.CarBrand))
+            if (String.IsNullOrEmpty(car.CarBrand))
             {
                 return new ValidationResult(false, "Введите брэнд машины");
             }

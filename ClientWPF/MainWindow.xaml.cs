@@ -21,41 +21,27 @@ namespace ClientWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private bool access = false;
-        private int index = -1;
         ViewModels.ViewModel VM = new ViewModels.ViewModel();
         public MainWindow()
         {
-            this.AddHandler(Validation.ErrorEvent, new RoutedEventHandler(OnErrorEvent));
             InitializeComponent();
             DataContext = VM;
         }
-
-        private void OnErrorEvent(object sender, RoutedEventArgs e)
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
         {
-            var validationEventArgs = e as ValidationErrorEventArgs;
-            if (validationEventArgs == null)
-                throw new Exception("Unexpected event args");
-            switch (validationEventArgs.Action)
-            {
-                case ValidationErrorEventAction.Added:
-                    {
-                        break;
-                    }
-                case ValidationErrorEventAction.Removed:
-                    {
-                        break;
-                    }
-                default:
-                    {
-                        throw new Exception("Unknown action");
-                    }
-            }
+            VM.DeleteCar();
+        }
+        private void ButtonSave_Click(object sender, RoutedEventArgs e)
+        {
+            VM.AddCar();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void CarsDataGrid_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
-            
+            if(VM.SelectedCar.Id != 0)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }
